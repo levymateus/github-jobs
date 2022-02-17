@@ -14,6 +14,14 @@ export const Button = styled.button`
   border: none;
   border-radius: 4px;
   box-sizing: border-box;
+  text-transform: capitalize;
+  &:hover{
+    cursor: pointer;
+    background-color: #0076fd;
+  }
+  &:active {
+    background-color: #3090fd;
+  }
 `;
 
 export default Button;

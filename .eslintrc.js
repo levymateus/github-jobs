@@ -24,6 +24,8 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'import/no-unresolved': 'error',
     'import/extensions': [0, { jsx: 'never' }],
+    'no-unused-vars': [0, { vars: 'none' }],
+    'react/require-default-props': 0,
   },
   settings: {
     'import/parsers': {
