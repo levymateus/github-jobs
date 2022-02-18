@@ -65,7 +65,7 @@ export function Search({
       }}
     >
       <IconOutlined size={18} inative>{icon}</IconOutlined>
-      <Input ref={inputRef} placeholder={placeholder} />
+      <Input type="text" ref={inputRef} placeholder={placeholder} />
       {children && React.cloneElement(React.Children.only(children), {
         role: 'button',
       })}
