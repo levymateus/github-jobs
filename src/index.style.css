@@ -2,3 +2,12 @@
   margin: 0;
   padding: 0;
 }
+
+.bg-img {
+  border-radius: 8px;
+  background-image: url(../assets/backgroundImg.png);
+}
+
+.bg-img.no-repeat {
+  background-repeat: no-repeat;
+}
