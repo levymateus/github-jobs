@@ -1,15 +1,30 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-type IconProps = { children: string, size: number, inative?: boolean }
+export type IconProps = {
+  children: string,
+  size: number,
+  inative?: boolean,
+  color?: string,
+  rotate?: number
+}
 
-export const IconOutlined = styled.span.attrs({ className: 'material-icons-outlined' })`
-  ${({ size }: IconProps) => css`
+export const IconOutlined = styled.span.attrs({
+  className: 'material-icons-outlined',
+})`
+
+  ${({
+    size,
+    inative,
+    color = 'color: rgba(0, 0, 0, 0.54)',
+    rotate,
+  }: IconProps) => css`
     font-size: ${size}px;
     width: ${size}px;
     height: ${size}px;
+    ${!inative ? color : 'color: #B9BDCF'};
+    ${`transform: rotate(${rotate}deg)`};
   `}
-  ${({ inative }: IconProps) => (!inative ? 'color: rgba(0, 0, 0, 0.54);' : 'color: #B9BDCF;')}
 `;
 
 export default IconOutlined;
