@@ -12,3 +12,4 @@ export * from 'components/Avatar';
 export * from 'components/JobCard';
 export * from 'components/JobDesc';
 export * from 'components/Company';
+export * from 'components/BackButton';
