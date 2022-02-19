@@ -34,7 +34,7 @@ export function Banner({ onSearch }: BannerProps) {
         onClick={onSearch}
         placeholder="Title, companies, expertise or benefits"
       >
-        <Button>Submit</Button>
+        <Button text="submit" />
       </Search>
     </Wrapper>
   );
