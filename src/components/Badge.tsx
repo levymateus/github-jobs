@@ -4,7 +4,7 @@ export const Badge = styled.div`
   width: fit-content;
   border: 1px solid #334680;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: transparent;
   color: #334680;
   font-weight: 700;
   font-style: normal;
@@ -18,6 +18,8 @@ export const Badge = styled.div`
   justify-content: center;
   box-sizing: border-box;
   user-select: none;
+  visibility: inherit;
+  display: inherit;
 `;
 
 export default Badge;
