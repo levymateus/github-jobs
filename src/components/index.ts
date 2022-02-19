@@ -8,3 +8,4 @@ export * from 'components/Banner';
 export * from 'components/Badge';
 export * from 'components/Typo';
 export * from 'components/Tag';
+export * from 'components/Avatar';
