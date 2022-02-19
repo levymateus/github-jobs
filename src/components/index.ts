@@ -10,3 +10,4 @@ export * from 'components/Typo';
 export * from 'components/Tag';
 export * from 'components/Avatar';
 export * from 'components/JobCard';
+export * from 'components/JobDesc';
