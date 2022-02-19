@@ -5,3 +5,4 @@ export * from 'components/Input';
 export * from 'components/Search';
 export * from 'components/IconOutlined';
 export * from 'components/Banner';
+export * from 'components/Badge';
