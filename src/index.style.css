@@ -1,8 +1,12 @@
 * {
   margin: 0;
   padding: 0;
+  user-select: default;
 }
 
+*:hover {
+  cursor: default;
+}
 .bg-img {
   border-radius: 8px;
   background-image: url(../assets/backgroundImg.png);

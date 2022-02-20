@@ -16,14 +16,18 @@ export const IconOutlined = styled.span.attrs({
   ${({
     size,
     inative,
-    color = 'color: rgba(0, 0, 0, 0.54)',
+    color = 'inherit',
     rotate,
   }: IconProps) => css`
     font-size: ${size}px;
     width: ${size}px;
     height: ${size}px;
-    ${!inative ? color : 'color: #B9BDCF'};
-    ${`transform: rotate(${rotate}deg)`};
+    color: ${inative ? '#B9BDCF' : color};
+    ${rotate && `transform: rotate(${rotate}deg)`};
+    user-select: inherit;
+    &:hover {
+      cursor: inherit;
+    }
   `}
 `;
 

@@ -25,6 +25,10 @@ const TypeTextCss = css`
   padding-right: 16px;
   outline: inherit;
 
+  &:hover {
+    cursor: text;
+  }
+
   &[placeholder] {
     color: inherit;
     text-overflow:ellipsis;
