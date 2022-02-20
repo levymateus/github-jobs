@@ -16,3 +16,4 @@ export * from 'components/BackButton';
 export * from 'components/Pagination';
 export * from 'components/LocSearch';
 export * from 'components/HowToApply';
+export * from 'components/Footer';
