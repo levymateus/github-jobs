@@ -27,7 +27,8 @@ export function Pagination({
   const offset = page - 2 >= 1 ? page - 2 : 1;
   const pagesLength = pageCount > MAX_LENGTH ? MAX_LENGTH - 2 : pageCount;
   const pages = Array.from({ length: pagesLength }).map((_, index) => index + offset);
-  const more = page < pageCount - 1 && pageCount > MAX_LENGTH;
+  const isMore = page < pageCount - 1 && pageCount > MAX_LENGTH;
+  const isMoreThanMax = pageCount > MAX_LENGTH;
   return (
     <FlexWrapper>
       <Button
@@ -41,7 +42,7 @@ export function Pagination({
           chevron_left
         </IconOutlined>
       </Button>
-      {page === pageCount && pageCount > MAX_LENGTH && (
+      {page === pageCount && isMoreThanMax && (
         <Button
           variant="outline"
           text="1"
@@ -50,7 +51,7 @@ export function Pagination({
           onClick={() => onSelect(1)}
         />
       )}
-      {!more && pageCount > MAX_LENGTH && <IconOutlined size={18} color="#B7BCCE">more_horiz</IconOutlined>}
+      {!isMore && isMoreThanMax && <IconOutlined size={18} color="#B7BCCE">more_horiz</IconOutlined>}
       {pages.map((value) => (
         value <= pageCount && (
         <Button
@@ -65,8 +66,8 @@ export function Pagination({
         />
         )
       ))}
-      {more && <IconOutlined size={18} color="#B7BCCE">more_horiz</IconOutlined>}
-      {page !== pageCount && pageCount > MAX_LENGTH && (
+      {isMore && <IconOutlined size={18} color="#B7BCCE">more_horiz</IconOutlined>}
+      {page !== pageCount && isMoreThanMax && (
         <Button
           variant="outline"
           text={String(pageCount)}
