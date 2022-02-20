@@ -1,0 +1,82 @@
+/**
+ * Location Search component
+ */
+import React, { useEffect, useState } from 'react';
+import { Checkbox, Radio } from 'components/Input';
+import { H3 } from 'components/Typo';
+import { Search } from 'components/Search';
+import styled from 'styled-components';
+import useDebounce from 'hooks/useDebounce';
+
+type Field = { name: string; value: string; checked?: boolean }
+
+export type LocSearchProps = {
+  onChange: (field: Field) => void
+}
+
+const Form = styled.form`
+  width: 100%;
+  label {
+    margin-left: 12px;
+  }
+  h3 {
+    margin-top: 30px;
+    margin-bottom: 14px;
+  }
+`;
+
+const Location = styled.div`
+  margin-top: 24px;
+  label + label {
+    margin-top: 16px;
+  }
+`;
+
+export function LocSearch({ onChange }: LocSearchProps) {
+  const [field, setField] = useState<Field>({ name: '', value: '', checked: false });
+  const search = useDebounce<Field>(field, 500);
+
+  useEffect(() => {
+    if (search.name === 'city,state,zip,country') {
+      onChange(search);
+    }
+  }, [search]);
+
+  useEffect(() => {
+    if (field.name !== 'city,state,zip,country') {
+      onChange(field);
+    }
+  }, [field]);
+
+  return (
+    <Form
+      onSubmit={(evt) => evt.preventDefault()}
+      onChange={(evt) => {
+        const { name, value, checked } = evt.target as HTMLInputElement;
+        setField({ name, value, checked });
+      }}
+    >
+      <Checkbox
+        id="fulltime-checkbox"
+        name="fulltime"
+        label="Full time"
+      >
+        Full time
+      </Checkbox>
+      <H3>Location</H3>
+      <Search
+        icon="public"
+        name="city,state,zip,country"
+        placeholder="City, state, zip code or country"
+      />
+      <Location>
+        <Radio name="city" label="London" />
+        <Radio name="city" label="Amsterdam" />
+        <Radio name="city" label="new York" />
+        <Radio name="city" label="Berlin" />
+      </Location>
+    </Form>
+  );
+}
+
+export default LocSearch;

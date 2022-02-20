@@ -97,6 +97,11 @@ const Label = styled.label`
   color: #334680;
   display: flex;
   align-items: center;
+  position: relative;
+
+  & label {
+    position: absolute;
+  }
 
   & input:hover, label:hover {
     cursor: pointer;
@@ -109,6 +114,9 @@ const Label = styled.label`
     position: absolute;
     left: 5px;
     border: 1px solid #B9BDCF;
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   & input:checked + span {

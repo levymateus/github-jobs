@@ -7,10 +7,11 @@ type SearchProps = {
   placeholder: string
   onClick?: (value: string) => void
   icon?: string
+  name?: string
   children?: React.ReactElement<HTMLAttributes<HTMLButtonElement>>
 }
 
-const SearchForm = styled.form<{ elevated?: boolean }>`
+const Wrapper = styled.div<{ elevated?: boolean }>`
   width: 100%;
   max-width: 790px;
   position: relative;
@@ -47,6 +48,7 @@ const SearchForm = styled.form<{ elevated?: boolean }>`
 `;
 
 export function Search({
+  name,
   placeholder,
   onClick: handleClick,
   icon = 'work_outline',
@@ -54,22 +56,29 @@ export function Search({
 }: SearchProps) {
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
+  function handleButtonClick(event: React.MouseEvent) {
+    event.preventDefault();
+    if (inputRef.current && handleClick) {
+      handleClick(inputRef.current.value);
+    }
+  }
+
   return (
-    <SearchForm
+    <Wrapper
       elevated={!!children}
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (inputRef.current && handleClick) {
-          handleClick(inputRef.current.value);
-        }
-      }}
     >
       <IconOutlined size={18} inative>{icon}</IconOutlined>
-      <Input type="text" ref={inputRef} placeholder={placeholder} />
+      <Input
+        name={name}
+        type="text"
+        ref={inputRef}
+        placeholder={placeholder}
+      />
       {children && React.cloneElement(React.Children.only(children), {
         role: 'button',
+        onClick: handleButtonClick,
       })}
-    </SearchForm>
+    </Wrapper>
   );
 }
 

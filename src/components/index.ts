@@ -14,3 +14,4 @@ export * from 'components/JobDesc';
 export * from 'components/Company';
 export * from 'components/BackButton';
 export * from 'components/Pagination';
+export * from 'components/LocSearch';
