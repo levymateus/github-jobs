@@ -5,17 +5,18 @@ import { Badge } from 'components/Badge';
 import { Tag } from 'components/Tag';
 
 export type JobCardProps = {
+  id: string
   src?: string
   company: string
   title: string
   fulltime?: boolean
   location: string[]
   published: string
+  onClick: (job: Pick<JobCardProps, 'id'>) => void
 }
 
 const Wrapper = styled.div`
-  width: calc(100% - 24px);
-  max-width: 790px;
+  width: 100%;
   padding: 12px;
   display: flex;
   background-color: #fff;
@@ -23,10 +24,7 @@ const Wrapper = styled.div`
   position: relative;
   box-sizing: border-box;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-
-  @media screen and (max-width: 790px) {
-    margin: 0px 12px;
-  }
+  cursor: pointer;
 `;
 
 const FlexContainer = styled.div`
@@ -100,15 +98,17 @@ const Display = styled.div<{ show?: boolean }>`
 `;
 
 export function JobCard({
+  id,
   src,
   company,
   title,
   fulltime,
   location,
   published,
+  onClick,
 }: JobCardProps) {
   return (
-    <Wrapper>
+    <Wrapper onClick={() => onClick({ id })}>
       <Avatar src={src} size="medium" />
       <FlexContainer>
         <JobInfo>

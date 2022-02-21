@@ -72,7 +72,7 @@ export function LocSearch({ onChange }: LocSearchProps) {
       <Location>
         <Radio name="city" label="London" />
         <Radio name="city" label="Amsterdam" />
-        <Radio name="city" label="new York" />
+        <Radio name="city" label="New York" />
         <Radio name="city" label="Berlin" />
       </Location>
     </Form>
