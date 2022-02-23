@@ -1,18 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BannerProps } from 'components/Banner';
 import { JobCardProps } from 'components/JobCard';
 import { JobListProps } from 'components/JobList';
 import { LocSearchProps } from 'components/LocSearch';
 import { PaginationProps } from 'components/Pagination';
 import usePagination from './usePagination';
-import api from '../api/api';
 import useQueries from '../api/useQueries';
+import Filter from '../utils/filter';
+import useIsMounted from './useIsMounted';
+import remotiveAPI from '../api/remotive';
+import type {
+  Response,
+  Job,
+  SeachTerms,
+  Field,
+} from '../types';
+import jobsFiler from '../utils/jobs-filter';
 
 type LocSearchHandlers = Required<Pick<LocSearchProps, 'onChange'>>
 type BannerHandlers = Required<Pick<BannerProps, 'onSearch'>>
 type JobCardHandlers = Required<Pick<JobCardProps, 'onClick'>>
 type JobListHandlers = Required<Pick<JobListProps, 'onLoadMore'>>
-type Job = Omit<JobCardProps, 'onClick'>
 
 export type Jobs = {
   pageCount: number
@@ -25,64 +33,77 @@ export type Jobs = {
   & JobListHandlers
   & PaginationProps
 
-type Response = { count: number, jobs: Job[] }
-type RemotiveJob = {
-  id: number,
-  url: StringConstructor,
-  title: string
-  company_name: string
-  company_logo: string
-  category: string
-  job_type: string
-  publication_date: string
-  candidate_required_location: string
-  description: string
-}
-type Data = {
-  'job-count': number
-  jobs: RemotiveJob[]
+type Store = {
+  'remotive': {
+    data: Response | undefined
+  } | undefined
 }
 
-function parseJobs(data: Data): Response {
-  if (data) {
-    return {
-      count: data['job-count'],
-      jobs: data?.jobs?.map((job) => ({
-        company: job.company_name,
-        id: String(job.id),
-        location: [job.candidate_required_location],
-        published: job.publication_date,
-        title: job.title,
-        fulltime: job.job_type === 'full_time',
-        src: job.company_logo,
-      })),
-    };
+type SearchState = Record<SeachTerms, Omit<Field, 'name'>>
+
+const initialSeachState: SearchState = {
+  title: { value: '' },
+  company: { value: '' },
+  expertise: { value: '' },
+  benefits: { value: '' },
+  city: { value: 'europe' },
+  state: { value: '' },
+  zip: { value: '' },
+  country: { value: '' },
+  fulltime: { value: '', checked: true },
+};
+
+function useJobs({ pageSize }: { pageSize: number }): Jobs {
+  const isMounted = useIsMounted();
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [search, setSearch] = useState<SearchState>(initialSeachState);
+
+  async function exec(filter: Filter<Job>) {
+    const res = await filter.exec();
+    if (!(res instanceof Error) && res && isMounted()) {
+      return res;
+    }
+    throw new Error('Error on execute filter');
   }
-  return { count: 0, jobs: [] };
-}
 
-function useJobs(): Jobs {
-  const store = useQueries({
+  const store = useQueries<Store>({
     queries: [
       [
         'remotive',
-        { category: 'software-dev' },
-        api<Data, Response>('https://remotive.io/api/remote-jobs', parseJobs),
+        { category: 'software-dev' }, remotiveAPI,
+        {
+          enabled: true,
+          notifyOnChangeProps: ['data'],
+          onSuccess: (data) => {
+            const filter = jobsFiler((data as Response).jobs, search);
+            exec(filter).then((res) => setJobs(res));
+          },
+        },
       ],
     ],
   });
-  const pageSize = 10;
+  const results = store?.remotive?.data?.jobs || [];
 
   const [page, {
-    next, prev, set,
-  }] = usePagination({ pageCount: store.remotive?.data?.count || 1 / pageSize });
+    next, prev, set: setPage, count: pageCount,
+  }] = usePagination({ pageCount: Math.floor(jobs.length / pageSize) });
 
   const onChange: Jobs['onChange'] = (field) => {
-    // console.log(field);
+    setSearch((prevState) => ({
+      ...prevState,
+      [field.name]: { value: field.value, checked: field.checked },
+    }));
   };
 
-  const onSearch: Jobs['onSearch'] = (search) => {
-    // console.log(search);
+  const onSearch: Jobs['onSearch'] = (searchSrt) => {
+    const [title, company, expertise, benefits] = searchSrt.split(',');
+    setSearch((prevState) => ({
+      ...prevState,
+      title: { value: title },
+      company: { value: company },
+      expertise: { value: expertise },
+      benefits: { value: benefits },
+    }));
   };
 
   const onClick: Jobs['onClick'] = ({ id }) => {
@@ -94,21 +115,28 @@ function useJobs(): Jobs {
     // const end = start + pageSize;
   };
 
-  const jobs = store?.remotive?.data?.jobs || [];
-  const pageCount = store?.remotive?.data?.count;
+  useEffect(() => {
+    if (results) {
+      const filter = jobsFiler(results, search);
+      exec(filter).then((res) => {
+        setJobs(res);
+        setPage(1);
+      });
+    }
+  }, [search]);
 
   return {
-    pageCount,
-    pageSize,
-    onChange,
-    onSearch,
-    jobs,
-    page,
-    onClick,
-    onLoadMore,
     onNext: next,
     onPrev: prev,
-    onSelect: set,
+    jobs,
+    page,
+    onSearch,
+    pageCount,
+    pageSize,
+    onLoadMore,
+    onClick,
+    onChange,
+    onSelect: setPage,
   };
 }
 

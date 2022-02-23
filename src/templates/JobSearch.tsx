@@ -55,6 +55,11 @@ const Section = styled.section<SectionProps>`
   height: 100%;
   grid-area: ${(props) => props.area};
 
+  ${(props) => props.area === 'jobs' && css`
+    max-width: 100%;
+    min-width: 100%;
+  `}
+
   @media screen and (max-width: 790px) {
     ${(props) => props.area === 'footer' && css`
       display: none;

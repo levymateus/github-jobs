@@ -3,17 +3,11 @@ import styled from 'styled-components';
 import { Avatar } from 'components/Avatar';
 import { Badge } from 'components/Badge';
 import { Tag } from 'components/Tag';
+import type { Job } from '../types';
 
 export type JobCardProps = {
-  id: string
-  src?: string
-  company: string
-  title: string
-  fulltime?: boolean
-  location: string[]
-  published: string
-  onClick: (job: Pick<JobCardProps, 'id'>) => void
-}
+  onClick: (job: Pick<Job, 'id'>) => void
+} & Job
 
 const Wrapper = styled.div`
   width: 100%;
@@ -107,6 +101,7 @@ export function JobCard({
   published,
   onClick,
 }: JobCardProps) {
+  const moment = new Date((Date.now() - new Date(published).getTime()));
   return (
     <Wrapper onClick={() => onClick({ id })}>
       <Avatar src={src} size="medium" />
@@ -121,7 +116,7 @@ export function JobCard({
           </Display>
           <FlexTags>
             <Tag icon="public" text={location.join(', ')} />
-            <Tag icon="schedule" text={published} />
+            <Tag icon="schedule" text={`${moment.getDate()} days ago`} />
           </FlexTags>
         </JobDetails>
       </FlexContainer>

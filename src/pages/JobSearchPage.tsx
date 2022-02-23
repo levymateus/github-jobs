@@ -16,9 +16,9 @@ export function JobsSearchPage() {
     onNext,
     onPrev,
     onSelect,
-  } = useJobs();
+  } = useJobs({ pageSize: 10 });
 
-  useTitle('Github Jobs');
+  useTitle(`Github Jobs ${page} of ${pageCount}`);
 
   return (
     <JobsSearchTemplate

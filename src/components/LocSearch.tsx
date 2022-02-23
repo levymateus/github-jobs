@@ -7,11 +7,10 @@ import { H3 } from 'components/Typo';
 import { Search } from 'components/Search';
 import styled from 'styled-components';
 import useDebounce from 'hooks/useDebounce';
-
-type Field = { name: string; value: string; checked?: boolean }
+import type { Field } from '../types';
 
 export type LocSearchProps = {
-  onChange: (field: Field) => void
+  onChange?: (field: Field) => void
 }
 
 const Form = styled.form`
@@ -37,13 +36,13 @@ export function LocSearch({ onChange }: LocSearchProps) {
   const search = useDebounce<Field>(field, 500);
 
   useEffect(() => {
-    if (search.name === 'city,state,zip,country') {
+    if (search.name && search.name === 'city,state,zip,country' && onChange) {
       onChange(search);
     }
   }, [search]);
 
   useEffect(() => {
-    if (field.name !== 'city,state,zip,country') {
+    if (field.name && field.name !== 'city,state,zip,country' && onChange) {
       onChange(field);
     }
   }, [field]);
@@ -60,6 +59,7 @@ export function LocSearch({ onChange }: LocSearchProps) {
         id="fulltime-checkbox"
         name="fulltime"
         label="Full time"
+        defaultChecked
       >
         Full time
       </Checkbox>
@@ -70,10 +70,11 @@ export function LocSearch({ onChange }: LocSearchProps) {
         placeholder="City, state, zip code or country"
       />
       <Location>
-        <Radio name="city" label="London" />
-        <Radio name="city" label="Amsterdam" />
-        <Radio name="city" label="New York" />
-        <Radio name="city" label="Berlin" />
+        <Radio name="city" label="Europe" value="europe" defaultChecked />
+        <Radio name="city" label="London" value="london" />
+        <Radio name="city" label="Amsterdam" value="amsterdam" />
+        <Radio name="city" label="New York" value="new york" />
+        <Radio name="city" label="Berlin" value="berlin" />
       </Location>
     </Form>
   );

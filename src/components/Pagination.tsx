@@ -27,6 +27,7 @@ export function Pagination({
   const pages = Array.from({ length: pagesLength }).map((_, index) => index + offset);
   const isMore = page < pageCount - 1 && pageCount > MAX_LENGTH;
   const isMoreThanMax = pageCount > MAX_LENGTH;
+
   return (
     <FlexWrapper>
       <Button

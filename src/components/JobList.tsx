@@ -35,22 +35,25 @@ export function JobList({
   useScroll((pos) => pos === 'bottom' && onLoadMore && onLoadMore());
   const start = (page - 1) * pageSize;
   const end = start + pageSize;
+  const list = jobs.slice(start, end) || [];
+
   return (
     <List>
-      {jobs.slice(start, end).map((item) => (
-        <ListItem key={item.id}>
+      {list.map((item) => (
+        <ListItem key={item?.id}>
           <JobCard
-            id={item.id}
+            id={item?.id}
             onClick={onJobCardClick}
-            company={`${item?.company}[${item.id}]` || ''}
+            company={item?.company || ''}
             location={item?.location || ['']}
             published={item?.published || ''}
             title={item?.title || ''}
-            fulltime={item.fulltime}
-            src={item.src}
+            fulltime={item?.fulltime}
+            src={item?.src}
           />
         </ListItem>
       ))}
+      {list.length <= 0 && <p>Nothing</p>}
     </List>
   );
 }
