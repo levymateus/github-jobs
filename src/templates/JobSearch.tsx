@@ -6,8 +6,8 @@ import {
   Pagination,
   LocSearchProps,
   JobCardProps,
-  JobListProps,
   PaginationProps,
+  Roller,
 } from 'components';
 import styled, { css } from 'styled-components';
 
@@ -17,14 +17,16 @@ type BaseJobSearchProps = {
   page: number
   jobs: Array<JobWithNoHandlers>
   pageSize: number
+  isFetching: boolean
   onSearch: (search: string) => void
-  onJobCardClick: JobCardProps['onClick']
-  onLoadMore: JobListProps['onLoadMore']
 }
 
 type JobsSearchProps = BaseJobSearchProps & Pick<LocSearchProps, 'onChange'> & PaginationProps
 
-type SectionProps = { area: 'banner' | 'location' | 'jobs' | 'footer' }
+type SectionProps = {
+  area: 'banner' | 'location' | 'jobs' | 'footer'
+  loading?: boolean
+}
 
 const Main = styled.main`
   @media screen and (max-width: 790px) {
@@ -55,24 +57,40 @@ const Section = styled.section<SectionProps>`
   height: 100%;
   grid-area: ${(props) => props.area};
 
+  ${(props) => props.loading && css`
+    display: flex;
+    justify-content: center;
+  `}
+
   ${(props) => props.area === 'jobs' && css`
     max-width: 100%;
     min-width: 100%;
+    align-items: center;
   `}
 
-  @media screen and (max-width: 790px) {
-    ${(props) => props.area === 'footer' && css`
-      display: none;
-    `}
-  }
+  ${(props) => props.area === 'location' && css`
+    @media screen and (max-width: 790px) {
+      max-width: 100%;
+      min-width: 100%;
+    }
 
-  @media screen and (min-width: 790px) {
-    ${(props) => props.area === 'footer' && css`
+    @media screen and (min-width: 790px) {
+      max-width: 512px;
+      min-width: 375px;
+    }
+  `}
+
+  ${(props) => props.area === 'footer' && css`
+    @media screen and (max-width: 790px) {
+      display: none;
+    }
+
+    @media screen and (min-width: 790px) {
       margin: auto;
       display: flex;
       justify-content: end;
-    `}
-  }
+    }
+  `}
 `;
 
 export function JobsSearch({
@@ -84,9 +102,8 @@ export function JobsSearch({
   onNext,
   onPrev,
   onSelect,
-  onJobCardClick,
-  onLoadMore,
   pageSize,
+  isFetching,
 }: JobsSearchProps) {
   return (
     <Main>
@@ -96,23 +113,25 @@ export function JobsSearch({
       <Section area="location">
         <LocSearch onChange={onChange} />
       </Section>
-      <Section area="jobs">
-        <JobList
-          pageSize={pageSize}
-          page={page}
-          onJobCardClick={onJobCardClick}
-          onLoadMore={onLoadMore}
-          jobs={jobs}
-        />
+      <Section area="jobs" loading={isFetching}>
+        {!isFetching ? (
+          <JobList
+            pageSize={pageSize}
+            page={page}
+            jobs={jobs}
+          />
+        ) : <Roller />}
       </Section>
       <Section area="footer">
-        <Pagination
-          pageCount={pageCount}
-          page={page}
-          onNext={onNext}
-          onPrev={onPrev}
-          onSelect={onSelect}
-        />
+        {!isFetching ? (
+          <Pagination
+            pageCount={pageCount}
+            page={page}
+            onNext={onNext}
+            onPrev={onPrev}
+            onSelect={onSelect}
+          />
+        ) : null}
       </Section>
     </Main>
   );

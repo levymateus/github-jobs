@@ -1,129 +1,86 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BannerProps } from 'components/Banner';
-import { JobCardProps } from 'components/JobCard';
-import { JobListProps } from 'components/JobList';
 import { LocSearchProps } from 'components/LocSearch';
 import { PaginationProps } from 'components/Pagination';
+import { useQuery } from 'react-query';
 import usePagination from './usePagination';
-import useQueries from '../api/useQueries';
-import Filter from '../utils/filter';
-import useIsMounted from './useIsMounted';
+import useMediaQuery from './useMediaQuery';
 import remotiveAPI from '../api/remotive';
+import { mobile } from '../utils/media-queries';
 import type {
   Response,
   Job,
-  SeachTerms,
-  Field,
 } from '../types';
-import jobsFiler from '../utils/jobs-filter';
 
 type LocSearchHandlers = Required<Pick<LocSearchProps, 'onChange'>>
 type BannerHandlers = Required<Pick<BannerProps, 'onSearch'>>
-type JobCardHandlers = Required<Pick<JobCardProps, 'onClick'>>
-type JobListHandlers = Required<Pick<JobListProps, 'onLoadMore'>>
 
 export type Jobs = {
   pageCount: number
   pageSize: number
   page: number
+  isFetching: boolean
   jobs: Job[]
 } & LocSearchHandlers
   & BannerHandlers
-  & JobCardHandlers
-  & JobListHandlers
   & PaginationProps
 
-type Store = {
-  'remotive': {
-    data: Response | undefined
-  } | undefined
-}
+type JobProps = { pageSize: number }
 
-type SearchState = Record<SeachTerms, Omit<Field, 'name'>>
-
+type SearchState = Record<'search' | 'category' | 'company_name', string>
 const initialSeachState: SearchState = {
-  title: { value: '' },
-  company: { value: '' },
-  expertise: { value: '' },
-  benefits: { value: '' },
-  city: { value: 'europe' },
-  state: { value: '' },
-  zip: { value: '' },
-  country: { value: '' },
-  fulltime: { value: '', checked: true },
+  search: 'london',
+  category: '',
+  company_name: '',
 };
 
-function useJobs({ pageSize }: { pageSize: number }): Jobs {
-  const isMounted = useIsMounted();
+function useJobs(props: JobProps): Jobs {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [search, setSearch] = useState<SearchState>(initialSeachState);
-
-  async function exec(filter: Filter<Job>) {
-    const res = await filter.exec();
-    if (!(res instanceof Error) && res && isMounted()) {
-      return res;
-    }
-    throw new Error('Error on execute filter');
-  }
-
-  const store = useQueries<Store>({
-    queries: [
-      [
-        'remotive',
-        { category: 'software-dev' }, remotiveAPI,
-        {
-          enabled: true,
-          notifyOnChangeProps: ['data'],
-          onSuccess: (data) => {
-            const filter = jobsFiler((data as Response).jobs, search);
-            exec(filter).then((res) => setJobs(res));
-          },
-        },
-      ],
-    ],
-  });
-  const results = store?.remotive?.data?.jobs || [];
-
+  const [fulltime, setFulltime] = useState(true);
+  const isMobile = useMediaQuery<boolean, boolean>(mobile, true, false);
+  const pageSize = isMobile ? jobs.length : props.pageSize;
+  const pageCount = Math.ceil(jobs.length / pageSize);
   const [page, {
-    next, prev, set: setPage, count: pageCount,
-  }] = usePagination({ pageCount: Math.floor(jobs.length / pageSize) });
+    next, prev, set: setPage,
+  }] = usePagination({ pageCount });
+
+  const { data, isFetching } = useQuery<unknown, Job[], Response>(
+    ['remotive', search],
+    remotiveAPI,
+    {
+      enabled: true,
+      notifyOnChangeProps: ['data'],
+      onSuccess: (res) => {
+        setJobs(() => res.jobs.filter((job) => job.fulltime === fulltime));
+        setPage(1);
+      },
+    },
+  );
 
   const onChange: Jobs['onChange'] = (field) => {
-    setSearch((prevState) => ({
-      ...prevState,
-      [field.name]: { value: field.value, checked: field.checked },
-    }));
+    if (field.name === 'fulltime') {
+      setFulltime(Boolean(field.checked));
+      if (data) {
+        setJobs(data.jobs.filter((job) => job.fulltime === Boolean(field.checked)));
+      }
+    } else {
+      setSearch((prevState) => ({
+        ...prevState,
+        search: field.value,
+      }));
+    }
   };
 
   const onSearch: Jobs['onSearch'] = (searchSrt) => {
-    const [title, company, expertise, benefits] = searchSrt.split(',');
+    const [title, company, expertise, benefits]: (string | undefined)[] = searchSrt.split(',');
     setSearch((prevState) => ({
       ...prevState,
-      title: { value: title },
-      company: { value: company },
-      expertise: { value: expertise },
-      benefits: { value: benefits },
+      search: `${title || ''} ${expertise || ''} ${benefits || ''}`,
+      company_name: company || '',
+      category: '',
     }));
   };
-
-  const onClick: Jobs['onClick'] = ({ id }) => {
-    // console.log(id);
-  };
-
-  const onLoadMore: Jobs['onLoadMore'] = () => {
-    // const start = (page - 1) * pageSize;
-    // const end = start + pageSize;
-  };
-
-  useEffect(() => {
-    if (results) {
-      const filter = jobsFiler(results, search);
-      exec(filter).then((res) => {
-        setJobs(res);
-        setPage(1);
-      });
-    }
-  }, [search]);
 
   return {
     onNext: next,
@@ -133,9 +90,8 @@ function useJobs({ pageSize }: { pageSize: number }): Jobs {
     onSearch,
     pageCount,
     pageSize,
-    onLoadMore,
-    onClick,
     onChange,
+    isFetching,
     onSelect: setPage,
   };
 }

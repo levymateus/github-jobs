@@ -5,12 +5,9 @@ import { Badge } from 'components/Badge';
 import { Tag } from 'components/Tag';
 import type { Job } from '../types';
 
-export type JobCardProps = {
-  onClick: (job: Pick<Job, 'id'>) => void
-} & Job
+export type JobCardProps = Job
 
 const Wrapper = styled.div`
-  width: 100%;
   padding: 12px;
   display: flex;
   background-color: #fff;
@@ -19,6 +16,18 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   cursor: pointer;
+
+  @media screen and (min-width: 790px) {
+    width: 100%;
+  }
+
+  @media screen and (min-width: 790px) and (max-width: 1200px) {
+    width: 512px;
+  }
+
+  @media screen and (min-width: 1200px) {
+    width: 790px;
+  }
 `;
 
 const FlexContainer = styled.div`
@@ -92,18 +101,16 @@ const Display = styled.div<{ show?: boolean }>`
 `;
 
 export function JobCard({
-  id,
   src,
   company,
   title,
   fulltime,
   location,
   published,
-  onClick,
 }: JobCardProps) {
   const moment = new Date((Date.now() - new Date(published).getTime()));
   return (
-    <Wrapper onClick={() => onClick({ id })}>
+    <Wrapper>
       <Avatar src={src} size="medium" />
       <FlexContainer>
         <JobInfo>

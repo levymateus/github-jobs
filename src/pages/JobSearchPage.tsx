@@ -8,22 +8,22 @@ export function JobsSearchPage() {
     onChange,
     onSearch,
     jobs,
-    onClick,
-    onLoadMore,
     pageSize,
     pageCount,
     page,
     onNext,
     onPrev,
     onSelect,
+    isFetching,
   } = useJobs({ pageSize: 10 });
 
-  useTitle(`Github Jobs ${page} of ${pageCount}`);
+  useTitle(`Github Jobs ${page} of ${pageCount} (${jobs.length})`);
 
   return (
     <JobsSearchTemplate
       jobs={jobs}
       page={page}
+      isFetching={isFetching}
       pageSize={pageSize}
       onSearch={onSearch}
       onChange={onChange}
@@ -31,8 +31,6 @@ export function JobsSearchPage() {
       onPrev={onPrev}
       onSelect={onSelect}
       pageCount={pageCount}
-      onJobCardClick={onClick}
-      onLoadMore={onLoadMore}
     />
   );
 }
