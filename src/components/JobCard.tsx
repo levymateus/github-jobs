@@ -3,19 +3,11 @@ import styled from 'styled-components';
 import { Avatar } from 'components/Avatar';
 import { Badge } from 'components/Badge';
 import { Tag } from 'components/Tag';
+import type { Job } from '../types';
 
-export type JobCardProps = {
-  src?: string
-  company: string
-  title: string
-  fulltime?: boolean
-  location: string[]
-  published: string
-}
+export type JobCardProps = Job
 
 const Wrapper = styled.div`
-  width: calc(100% - 24px);
-  max-width: 790px;
   padding: 12px;
   display: flex;
   background-color: #fff;
@@ -23,9 +15,18 @@ const Wrapper = styled.div`
   position: relative;
   box-sizing: border-box;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 
-  @media screen and (max-width: 790px) {
-    margin: 0px 12px;
+  @media screen and (min-width: 790px) {
+    width: 100%;
+  }
+
+  @media screen and (min-width: 790px) and (max-width: 1200px) {
+    width: 512px;
+  }
+
+  @media screen and (min-width: 1200px) {
+    width: 790px;
   }
 `;
 
@@ -107,6 +108,7 @@ export function JobCard({
   location,
   published,
 }: JobCardProps) {
+  const moment = new Date((Date.now() - new Date(published).getTime()));
   return (
     <Wrapper>
       <Avatar src={src} size="medium" />
@@ -121,7 +123,7 @@ export function JobCard({
           </Display>
           <FlexTags>
             <Tag icon="public" text={location.join(', ')} />
-            <Tag icon="schedule" text={published} />
+            <Tag icon="schedule" text={`${moment.getDate()} days ago`} />
           </FlexTags>
         </JobDetails>
       </FlexContainer>

@@ -17,3 +17,5 @@ export * from 'components/Pagination';
 export * from 'components/LocSearch';
 export * from 'components/HowToApply';
 export * from 'components/Footer';
+export * from 'components/JobList';
+export * from 'components/Roller';

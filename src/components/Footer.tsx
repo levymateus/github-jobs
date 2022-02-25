@@ -7,28 +7,40 @@ type FooterProps = {
 
 const Wrapper = styled.footer`
   width: 100%;
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  position: relative;
   padding: 24px 0px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: center;
+  background-color: #F6F7FB;
+
   p {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    font-style: normal;
     font-weight: 500;
-    line-height: 17px;
-    letter-spacing: 0em;
-    text-align: center;
     color: #B9BDCF;
-    strong {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      font-style: normal;
+    a {
+      color: inherit;
       font-weight: 700;
-      line-height: 17px;
-      letter-spacing: 0em;
-      text-align: center;
+      text-decoration: underline;
     }
+    a:hover {
+      cursor: pointer;
+    }
+    a:active {
+      color: inherit
+    }
+  }
+
+  @media screen and (max-width: 790px) {
+    position: relative;
+  }
+
+  @media screen and (min-width: 790px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
   }
 `;
 
@@ -38,7 +50,7 @@ export function Footer({ username }: FooterProps) {
       <p>
         created by
         {' '}
-        <strong>{username}</strong>
+        <a href="https://github.com/levymateus" target="_blank" rel="noreferrer">{username}</a>
         {' '}
         - devChallenges.io
       </p>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from 'components/Button';
 import { IconOutlined } from 'components/IconOutlined';
 import styled from 'styled-components';
@@ -15,9 +15,7 @@ export type PaginationProps = {
 
 const FlexWrapper = styled.div`
   gap: 12px;
-  width: 100%;
   display: flex;
-  min-width: 375px;
   align-items: center;
 `;
 
@@ -29,6 +27,7 @@ export function Pagination({
   const pages = Array.from({ length: pagesLength }).map((_, index) => index + offset);
   const isMore = page < pageCount - 1 && pageCount > MAX_LENGTH;
   const isMoreThanMax = pageCount > MAX_LENGTH;
+
   return (
     <FlexWrapper>
       <Button

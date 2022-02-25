@@ -5,6 +5,7 @@ export type InputProps = HTMLAttributes<HTMLInputElement>
 export interface CheckboxProps extends InputProps {
   label: string
   name?: string
+  value?: string
 }
 export type RadioProps = CheckboxProps
 
@@ -146,11 +147,11 @@ export const Input = styled.input<InputProps>`
 `;
 
 export function Checkbox({
-  id, label, name,
+  id, label, name, defaultChecked,
 }: CheckboxProps) {
   return (
     <Label htmlFor={id}>
-      <Input id={id} type="checkbox" name={name} />
+      <Input id={id} type="checkbox" name={name} defaultChecked={defaultChecked} />
       <span />
       {label}
     </Label>
@@ -158,11 +159,11 @@ export function Checkbox({
 }
 
 export function Radio({
-  id, label, name,
+  id, label, name, value, defaultChecked,
 }: RadioProps) {
   return (
     <Label htmlFor={id}>
-      <Input id={id} type="radio" name={name} />
+      <Input id={id} type="radio" name={name} value={value} defaultChecked={defaultChecked} />
       <span />
       {label}
     </Label>

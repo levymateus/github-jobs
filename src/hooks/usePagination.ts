@@ -35,11 +35,7 @@ function usePagination({ pageCount, initialState = 1 }: PaginationProps): Pagina
 
   const prev: PaginationFuncs['prev'] = useCallback(() => setPage(dec), [page]);
 
-  const set: PaginationFuncs['set'] = useCallback((value) => {
-    if (value <= pageCount && value >= 1) {
-      setPage(value);
-    }
-  }, []);
+  const set: PaginationFuncs['set'] = useCallback((value) => setPage(value), []);
 
   return [page, {
     set, next, prev, count: pageCount,
