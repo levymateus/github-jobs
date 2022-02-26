@@ -85,7 +85,7 @@ export function JobDetails({
 
       <Section name="how-to-apply">
         <HowToApply
-          description="Please email a copy of your resume and online portfolio to wes@kasisto.com & CC eric@kasisto.com"
+          description="Please email a copy of your resume and online portfolio to <a href='mailto:wes@kasisto.com'>wes@kasisto.com</a> & CC <a href='mailto:eric@kasisto.com'>eric@kasisto.com<a/>"
         />
       </Section>
 

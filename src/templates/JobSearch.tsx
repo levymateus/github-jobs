@@ -23,15 +23,15 @@ type BaseJobSearchProps = {
 type JobsSearchProps = BaseJobSearchProps & Pick<LocSearchProps, 'onChange'> & PaginationProps
 
 type SectionProps = {
-  area: 'banner' | 'location' | 'jobs' | 'footer'
+  name: 'banner' | 'location' | 'jobs' | 'footer'
   loading?: 'true' | 'false'
 }
 
 const Main = styled.main`
   @media screen and (max-width: 790px) {
-    display: flex;
-    flex-direction: column;
-
+    & > section {
+      margin-top: 42px;
+    }
     section + section {
       margin-top: 32px;
     }
@@ -39,57 +39,45 @@ const Main = styled.main`
 
   @media screen and (min-width: 790px) {
     display: grid;
-    grid-template-areas:
-        "banner banner"
-        "location jobs"
-        "footer footer";
-    grid-template-rows: auto;
-    max-width: 1200px;
+    grid-template-columns: 34% 1fr;
     margin: auto;
-    gap: 32px;
-    box-sizing: content-box;
+    max-width: 1200px;
+    grid-column-gap: 32px;
+    grid-row-gap: 16px;
+  }
+
+  @media screen and (max-width: 790px) {
+    width: 100%;
   }
 `;
 
 const Section = styled.section<SectionProps>`
-  width: 100%;
-  height: 100%;
-  grid-area: ${(props) => props.area};
-
-  ${({ loading }) => loading && loading === 'true' && css`
+  ${(props) => props.name === 'jobs' && props.loading === 'true' && css`
     display: flex;
     justify-content: center;
-  `}
-
-  ${(props) => props.area === 'jobs' && css`
-    max-width: 100%;
-    min-width: 100%;
     align-items: center;
   `}
-
-  ${(props) => props.area === 'location' && css`
-    @media screen and (max-width: 790px) {
-      max-width: 100%;
-      min-width: 100%;
-    }
-
-    @media screen and (min-width: 790px) {
-      max-width: 512px;
-      min-width: 375px;
-    }
-  `}
-
-  ${(props) => props.area === 'footer' && css`
-    @media screen and (max-width: 790px) {
-      display: none;
-    }
-
-    @media screen and (min-width: 790px) {
-      margin: auto;
+  @media screen and (min-width: 790px) {
+    ${(props) => props.name === 'banner' && css`
+      grid-column: 1 / 3;
+      margin-bottom: 32px;
+    `}
+    ${(props) => props.name === 'footer' && css`
+      grid-column: 2 / 3;
       display: flex;
-      justify-content: end;
-    }
-  `}
+      justify-content: flex-end;
+    `}
+    ${(props) => props.name === 'jobs' && css`
+      grid-column: 2 / 3;
+    `}
+    ${(props) => props.name === 'location' && css`
+      grid-column: 1 / 2;
+    `}
+  }
+
+  @media screen and (max-width: 790px) {
+    width: 100%;
+  }
 `;
 
 export function JobsSearch({
@@ -106,13 +94,13 @@ export function JobsSearch({
 }: JobsSearchProps) {
   return (
     <Main>
-      <Section area="banner">
+      <Section name="banner">
         <Banner onSearch={onSearch} />
       </Section>
-      <Section area="location">
+      <Section name="location">
         <LocSearch onChange={onChange} />
       </Section>
-      <Section area="jobs" loading={toString(isFetching)}>
+      <Section name="jobs" loading={toString(isFetching)}>
         {!isFetching ? (
           <JobList
             pageSize={pageSize}
@@ -121,7 +109,7 @@ export function JobsSearch({
           />
         ) : <Roller />}
       </Section>
-      <Section area="footer">
+      <Section name="footer">
         {!isFetching ? (
           <Pagination
             pageCount={pageCount}

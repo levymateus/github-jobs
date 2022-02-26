@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   user-select: default;
+  cursor: inherit;
 }
 
 html, body {
@@ -16,7 +17,12 @@ html, body {
 }
 
 *:hover {
-  cursor: default;
+  cursor: inherit;
+}
+
+h1, h2, h3 {
+  color: #B9BDCF;
+  font-family: 'Roboto', sans-serif;
 }
 
 .bg-img {
