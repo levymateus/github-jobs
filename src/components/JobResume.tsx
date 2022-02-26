@@ -11,12 +11,15 @@ const Wrapper = styled.div`
   background-color: transparent;
   position: relative;
   box-sizing: border-box;
-  flex-flow: column;
   cursor: default;
 
   @media screen and (min-width: 790px) {
     width: 100%;
-    flex-flow: row;
+    flex-direction: row;
+  }
+
+  @media screen and (max-width: 790px) {
+    flex-direction: column;
   }
 `;
 
