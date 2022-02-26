@@ -11,7 +11,7 @@ export function Tag({ text, icon }: TagProps) {
   return (
     <Span>
       <IconOutlined inative size={15}>{icon}</IconOutlined>
-      {text}
+      <p>{text}</p>
     </Span>
   );
 }

@@ -4,7 +4,7 @@ import { JobCardProps, JobCard } from 'components/JobCard';
 import { Link } from 'react-router-dom';
 
 export type JobListProps = {
-  jobs: Array<Omit<JobCardProps, 'onClick'>>
+  jobs: Array<JobCardProps>
   page: number
   pageSize: number
 }
@@ -42,7 +42,7 @@ export function JobList({
     <List>
       {list.map((item) => (
         <ListItem key={item?.id}>
-          <Link to={{ pathname: `job/${item.id}` }}>
+          <Link to={{ pathname: `job/${item.id}` }} state={item}>
             <JobCard
               id={item?.id}
               company={item?.company || ''}
@@ -51,6 +51,7 @@ export function JobList({
               title={item?.title || ''}
               fulltime={item?.fulltime}
               src={item?.src}
+              description=""
             />
           </Link>
         </ListItem>
