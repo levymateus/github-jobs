@@ -5,6 +5,7 @@ import {
   Routes,
 } from 'react-router-dom';
 import { JobsSearchPage } from 'pages/JobSearchPage';
+import { JobDetailsPage } from 'pages/JobDetailsPage';
 import styled from 'styled-components';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Footer, Header } from './components';
@@ -36,6 +37,7 @@ function App() {
           <Header />
           <Routes>
             <Route path="/" element={<JobsSearchPage />} />
+            <Route path="/job/:id" element={<JobDetailsPage />} />
           </Routes>
           <Footer username="levymateus" />
         </Layout>

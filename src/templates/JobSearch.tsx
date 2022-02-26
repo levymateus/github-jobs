@@ -5,17 +5,16 @@ import {
   JobList,
   Pagination,
   LocSearchProps,
-  JobCardProps,
   PaginationProps,
   Roller,
+  JobCardProps,
 } from 'components';
 import styled, { css } from 'styled-components';
-
-type JobWithNoHandlers = Omit<JobCardProps, 'onClick'>
+import { toString } from '../utils/toString';
 
 type BaseJobSearchProps = {
   page: number
-  jobs: Array<JobWithNoHandlers>
+  jobs: Array<JobCardProps>
   pageSize: number
   isFetching: boolean
   onSearch: (search: string) => void
@@ -25,7 +24,7 @@ type JobsSearchProps = BaseJobSearchProps & Pick<LocSearchProps, 'onChange'> & P
 
 type SectionProps = {
   area: 'banner' | 'location' | 'jobs' | 'footer'
-  loading?: boolean
+  loading?: 'true' | 'false'
 }
 
 const Main = styled.main`
@@ -57,7 +56,7 @@ const Section = styled.section<SectionProps>`
   height: 100%;
   grid-area: ${(props) => props.area};
 
-  ${(props) => props.loading && css`
+  ${({ loading }) => loading && loading === 'true' && css`
     display: flex;
     justify-content: center;
   `}
@@ -113,7 +112,7 @@ export function JobsSearch({
       <Section area="location">
         <LocSearch onChange={onChange} />
       </Section>
-      <Section area="jobs" loading={isFetching}>
+      <Section area="jobs" loading={toString(isFetching)}>
         {!isFetching ? (
           <JobList
             pageSize={pageSize}

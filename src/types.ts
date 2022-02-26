@@ -6,6 +6,7 @@ export type Job = {
   fulltime?: boolean
   location: string[]
   published: string
+  description: string
 }
 
 export type Response = { count: number, jobs: Job[] }

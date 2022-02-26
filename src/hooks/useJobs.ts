@@ -11,6 +11,7 @@ import type {
   Response,
   Job,
 } from '../types';
+import useIsMounted from './useIsMounted';
 
 type LocSearchHandlers = Required<Pick<LocSearchProps, 'onChange'>>
 type BannerHandlers = Required<Pick<BannerProps, 'onSearch'>>
@@ -35,6 +36,7 @@ const initialSeachState: SearchState = {
 };
 
 function useJobs(props: JobProps): Jobs {
+  const isMounted = useIsMounted();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [search, setSearch] = useState<SearchState>(initialSeachState);
   const [fulltime, setFulltime] = useState(true);
@@ -44,6 +46,10 @@ function useJobs(props: JobProps): Jobs {
   const [page, {
     next, prev, set: setPage,
   }] = usePagination({ pageCount });
+
+  async function filterJobsAsync(jobsList: Job[], filterProps: { fulltime: boolean }) {
+    return jobsList.filter((job) => job.fulltime === Boolean(filterProps.fulltime));
+  }
 
   const { data, isFetching } = useQuery<unknown, Job[], Response>(
     ['remotive', search],
@@ -62,7 +68,12 @@ function useJobs(props: JobProps): Jobs {
     if (field.name === 'fulltime') {
       setFulltime(Boolean(field.checked));
       if (data) {
-        setJobs(data.jobs.filter((job) => job.fulltime === Boolean(field.checked)));
+        filterJobsAsync(data.jobs, { fulltime: Boolean(field.checked) })
+          .then((res) => {
+            if (isMounted()) {
+              setJobs(res);
+            }
+          });
       }
     } else {
       setSearch((prevState) => ({
