@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   user-select: default;
+  cursor: inherit;
 }
 
 html, body {
@@ -16,7 +17,7 @@ html, body {
 }
 
 *:hover {
-  cursor: default;
+  cursor: inherit;
 }
 
 .bg-img {

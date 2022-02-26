@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   position: relative;
   box-sizing: border-box;
   flex-flow: column;
-  cursor: pointer;
+  cursor: default;
 
   @media screen and (min-width: 790px) {
     width: 100%;
