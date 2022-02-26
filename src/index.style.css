@@ -20,6 +20,11 @@ html, body {
   cursor: inherit;
 }
 
+h1, h2, h3 {
+  color: #B9BDCF;
+  font-family: 'Roboto', sans-serif;
+}
+
 .bg-img {
   border-radius: 8px;
   background-image: url(../assets/backgroundImg.png);

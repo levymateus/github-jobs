@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { H3 } from 'components/Typo';
+import { H3, HTML } from 'components/Typo';
 
 type HowToApplyProps = {
   description: string
@@ -26,7 +26,9 @@ export function HowToApply({ description }: HowToApplyProps) {
   return (
     <Wrapper>
       <H3>how to apply</H3>
-      <p>{description}</p>
+      <HTML
+        dangerouslySetInnerHTML={{ __html: description }}
+      />
     </Wrapper>
   );
 }

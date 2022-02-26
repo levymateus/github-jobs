@@ -42,6 +42,9 @@ export const HTML = styled.div`
   ul {
     padding-left: 32px;
   }
+  a {
+    color: #1E86FF;
+  }
 `;
 
 export default H3;

@@ -35,6 +35,10 @@ const initialSeachState: SearchState = {
   company_name: '',
 };
 
+async function filterJobsAsync(jobs: Job[], props: { fulltime: boolean }) {
+  return jobs.filter((job) => job.fulltime === Boolean(props.fulltime));
+}
+
 function useJobs(props: JobProps): Jobs {
   const isMounted = useIsMounted();
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -46,10 +50,6 @@ function useJobs(props: JobProps): Jobs {
   const [page, {
     next, prev, set: setPage,
   }] = usePagination({ pageCount });
-
-  async function filterJobsAsync(jobsList: Job[], filterProps: { fulltime: boolean }) {
-    return jobsList.filter((job) => job.fulltime === Boolean(filterProps.fulltime));
-  }
 
   const { data, isFetching } = useQuery<unknown, Job[], Response>(
     ['remotive', search],
@@ -78,7 +78,7 @@ function useJobs(props: JobProps): Jobs {
     } else {
       setSearch((prevState) => ({
         ...prevState,
-        search: field.value,
+        search: `${prevState.search} ${field.value}`,
       }));
     }
   };
