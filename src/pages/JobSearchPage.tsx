@@ -15,9 +15,14 @@ export function JobsSearchPage() {
     onPrev,
     onSelect,
     isFetching,
+    isError,
   } = useJobs({ pageSize: 10 });
 
   useTitle(`Github Jobs ${page} of ${pageCount} (${jobs.length})`);
+
+  if (isError) {
+    return <p>Error.</p>;
+  }
 
   return (
     <JobsSearchTemplate

@@ -33,6 +33,7 @@ function handleResponse(data: Data): Response {
         title: job.title,
         fulltime: job.job_type === 'full_time',
         src: job.company_logo,
+        description: job.description,
       })),
     };
   }

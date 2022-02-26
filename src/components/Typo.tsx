@@ -11,6 +11,7 @@ export const Span = styled.span`
   font-size: 12px;
   line-height: 14.06px;
   gap: 8px;
+  white-space: nowrap;
 `;
 
 export const H3 = styled.h3`
@@ -21,6 +22,29 @@ export const H3 = styled.h3`
   line-height: 21px;
   color: #B9BDCF;
   text-transform: uppercase;
+`;
+
+export const Text = styled.div`
+  font-family: 'Roboto';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #334680;
+`;
+
+export const HTML = styled.div`
+  p {
+    margin: 12px 0px;
+  }
+  ul {
+    padding-left: 32px;
+  }
+  a {
+    color: #1E86FF;
+  }
 `;
 
 export default H3;

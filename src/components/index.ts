@@ -19,3 +19,4 @@ export * from 'components/HowToApply';
 export * from 'components/Footer';
 export * from 'components/JobList';
 export * from 'components/Roller';
+export * from 'components/JobResume';
