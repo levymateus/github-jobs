@@ -20,8 +20,11 @@ const api = <Data, Response>(
       url += `?${params}`;
     }
     const response = await window.fetch(url);
-    const data = await response.json() as unknown;
-    return callback(data as Data);
+    if (response.status === 200) {
+      const data = await response.json() as unknown;
+      return callback(data as Data);
+    }
+    throw new Error(response.statusText);
   };
 
 export default api;
