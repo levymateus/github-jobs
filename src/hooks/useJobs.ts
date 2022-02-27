@@ -31,7 +31,7 @@ type JobProps = { pageSize: number }
 
 type SearchState = Record<'search' | 'category' | 'company_name', string>
 const initialSeachState: SearchState = {
-  search: 'london',
+  search: 'europe,london,uk',
   category: '',
   company_name: '',
 };
@@ -44,7 +44,7 @@ function useJobs(props: JobProps): Jobs {
   const isMounted = useIsMounted();
   const [jobs, setJobs] = useState<Job[]>([]);
   const searchRef = useRef<string>('');
-  const fixedLocationRef = useRef<string>('london');
+  const fixedLocationRef = useRef<string>('europe,london,uk');
   const locationRef = useRef<string>('');
   const [search, setSearch] = useState<SearchState>(initialSeachState);
   const [fulltime, setFulltime] = useState(true);
@@ -62,7 +62,11 @@ function useJobs(props: JobProps): Jobs {
       enabled: true,
       notifyOnChangeProps: ['data'],
       onSuccess: (res) => {
-        setJobs(() => res.jobs.filter((job) => job.fulltime === fulltime));
+        const location = (locationRef.current || fixedLocationRef.current).split(',');
+        setJobs(() => res.jobs.filter((job) => job.fulltime === fulltime)
+          .filter((job) => job.location
+            .some((loc) => location
+              .some((b) => loc.toLocaleLowerCase().includes(b.toLocaleLowerCase())))));
         setPage(1);
       },
     },
@@ -88,7 +92,7 @@ function useJobs(props: JobProps): Jobs {
     } else {
       setSearch((prevState) => ({
         ...prevState,
-        search: `${searchRef.current} ${locationRef.current || fixedLocationRef.current}`.trim(),
+        search: `${searchRef.current},${locationRef.current || fixedLocationRef.current}`.trim(),
       }));
     }
   };
@@ -98,7 +102,7 @@ function useJobs(props: JobProps): Jobs {
     searchRef.current = [(title || '').trim(), (expertise || '').trim(), (benefits || '').trim()].join(' ').trim();
     setSearch((prevState) => ({
       ...prevState,
-      search: `${searchRef.current} ${fixedLocationRef.current}`.trim(),
+      search: `${searchRef.current},${locationRef.current || fixedLocationRef.current}`.trim(),
       company_name: (company || '').trim(),
       category: '',
     }));
