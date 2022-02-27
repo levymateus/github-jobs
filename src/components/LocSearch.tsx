@@ -70,10 +70,10 @@ export function LocSearch({ onChange }: LocSearchProps) {
         placeholder="City, state, zip code or country"
       />
       <Location>
-        <Radio name="city" label="London" value="london" defaultChecked />
-        <Radio name="city" label="Amsterdam" value="amsterdam" />
-        <Radio name="city" label="New York" value="new york" />
-        <Radio name="city" label="Berlin" value="berlin" />
+        <Radio name="city" label="London" value="europe,london,uk" defaultChecked />
+        <Radio name="city" label="Amsterdam" value="europe,amsterdam,netherlands,nl" />
+        <Radio name="city" label="New York" value="america,new york,usa" />
+        <Radio name="city" label="Berlin" value="europe,berlin,germany" />
       </Location>
     </Form>
   );
